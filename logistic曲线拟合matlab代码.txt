@@ -1,0 +1,28 @@
+xdata=1:21;
+ydata=[44.6492 108.5499 240.0595 319.3420 402.5086 519.3712 615.6134 826.5358 1004.8023 1213.5140 1404.7209 1653.3930 2079.4121 2666.0804 3283.2408 4189.3628 5208.0295 6466.7029 7680.6251 8520.1318 9240.2067 
+];
+%% 指定非线性函数拟合曲线
+X0=[10000 10 0.2];
+[parameter,resnorm]=lsqcurvefit(@fun,X0,xdata,ydata); %指定拟合曲线
+A=parameter(1);
+B=parameter(2);
+C=parameter(3);
+fprintf('拟合Logistic曲线的参数A为：%.8f，B为：%.8f，C为：%.8f', A, B, C);
+fit_y=fun(parameter,xdata);
+figure(1)
+plot(xdata, ydata, 'r*');
+hold on
+plot(xdata,fit_y,'b-');
+xlabel('t');
+ylabel('y');
+legend('观测数据点','拟合曲线', 'Location', 'northwest');
+xlabel("年数（从2000年开始）");ylabel("技术成熟度");
+saveas(gcf,sprintf('Logistic曲线.jpg'),'bmp');
+
+
+%% Logistic函数
+% y=A/(1+B*exp(-C*t))
+function f=fun(X,t)
+f=X(1)./(1+X(2).*exp(-X(3).*(t)));
+end
+
